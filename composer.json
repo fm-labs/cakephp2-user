@@ -1,11 +1,15 @@
 {
     "name": "fm-labs/cakephp-user",
     "description": "CakePHP User Plugin",
+    "type": "cakephp-plugin",
     "minimum-stability": "stable",
     "authors": [
         {
             "name": "fm-labs",
             "email": "flowmotionlabs@gmail.com"
         }
-    ]
+    ],
+    "require": {
+        "composer/installers": "~1.0"
+    }
 }
