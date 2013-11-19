@@ -1,0 +1,11 @@
+{
+    "name": "fm-labs/cakephp-user",
+    "description": "CakePHP User Plugin",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "fm-labs",
+            "email": "flowmotionlabs@gmail.com"
+        }
+    ]
+}
