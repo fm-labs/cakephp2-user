@@ -1,17 +1,12 @@
 <div class="index" id="users_login">
 	<?php echo $this->Session->flash('auth'); ?>
-	<?php if ($this->get('redirect')):?>
-	<div class="login-redirect">
-		<?php echo $this->Html->link($this->get('redirect')); ?>
-	</div>
-	<?php endif; ?>
 	<div id="login_form">
-		<?php echo $this->Form->create('User.UserLogin'); ?>
+		<?php echo $this->Form->create(Configure::read('User.Auth.userModel')); ?>
 		<fieldset>
 			<legend><?php echo __("Login");?></legend>
 			<div class="row-fluid">
 				<div class="span6">
-				<?php echo $this->Form->input('username');	?>
+				<?php echo $this->Form->input('email');	?>
 				</div>
 				<div class="span6">
 				<?php echo $this->Form->input('password');	?>
