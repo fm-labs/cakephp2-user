@@ -8,26 +8,25 @@ class UserSchema extends CakeSchema {
 	public function after($event = array()) {
 	}
 
-	public $user_logins = array(
+	public $users = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
 		'scope' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'user_id' => array('type' => 'integer', 'null' => false, 'default' => null),
-		'username' => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'unique', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'first_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'last_name' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'password' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'email' => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'unique', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'verfication_code' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'verfication_code' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'verified' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
 		'allow_login' => array('type' => 'boolean', 'null' => false, 'default' => '0'),
-		'lastlogin_datetime' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'lastlogin_ip' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'lastlogin_datetime' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
 		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
+		'facebook_uid' => array('type' => 'biginteger', 'null' => true, 'default' => null, 'key' => 'unique'),
 		'indexes' => array(
 			'PRIMARY' => array('column' => 'id', 'unique' => 1),
 			'mail' => array('column' => 'email', 'unique' => 1),
-			'username' => array('column' => 'username', 'unique' => 1),
-			'username_pwd_published' => array('column' => array('username', 'password', 'allow_login'), 'unique' => 0),
-			'username_pwd' => array('column' => array('username', 'password'), 'unique' => 0)
+			'facebook_uid' => array('column' => 'facebook_uid', 'unique' => 1)
 		),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
 	);
