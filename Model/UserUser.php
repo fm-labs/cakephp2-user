@@ -110,11 +110,15 @@ class UserUser extends UserAppModel {
 		*/
 	);
 
-	/*
-	public function __construct($id=false,$table=null,$ds=null) {
+	public function __construct($id = false, $table = null, $ds = null) {
+		if (!isset($this->virtualFields['name'])) {
+			$alias = ($this->alias) ? $this->alias : get_class($this);
+			$this->virtualFields['name'] = 'CONCAT(' . $alias . '.first_name, " ", ' . $alias . '.last_name)';
+			$this->displayField = 'name';
+		}
+
 		parent::__construct($id, $table, $ds);
 	}
-	*/
 
 /**
  * Validates that a field is an exact duplicate of another field
