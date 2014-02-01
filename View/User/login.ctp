@@ -13,10 +13,10 @@
 				</div>
 			</div>
 			<?php
-			echo $this->Form->button(__("Login"),array('class'=>'btn btn-primary btn-success'));
+			echo $this->Form->button(__("Login"), array('class' => 'btn btn-primary btn-success'));
 			?>
 			<?php 
-			echo $this->Html->link(__('Register'), array('action'=>'register'),array('class'=>'btn'));
+			echo $this->Html->link(__('Register'), array('action' => 'register'), array('class' => 'btn'));
 			?>
 		</fieldset>
 		<?php echo $this->Form->end(); ?>
@@ -27,5 +27,12 @@
 			<?php echo env('HTTP_USER_AGENT') ?> 
 		</div>
 	</div>
+
+	<?php if (Configure::read('debug') > 0): ?>
+	<pre>You can modify this page by creating a file in
+
+		/app/Views/Plugin/User/View/User/login.ctp<br />
+	</pre>
+	<?php endif; ?>
 	<?php debug($this->Session->read());?>
 </div>

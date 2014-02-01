@@ -3,7 +3,7 @@ App::uses('UserAppController', 'User.Controller');
 
 /**
  * @property AuthComponent $Auth
- * @property User $User
+ * @property UserUser $User
  */
 class UserController extends UserAppController {
 
@@ -22,11 +22,11 @@ class UserController extends UserAppController {
 		parent::beforeFilter();
 
 		if (!$this->Components->loaded('Auth')) {
-			throw new CakeException(__('Authentication is not enabled'));
+			throw new CakeException(__('Authentication is not enabled. Please enable the Auth component in your AppController'));
 		}
 
 		if (!Configure::read('User.Auth')) {
-			throw new CakeException(__('User plugin is not configured correctly'));
+			throw new CakeException(__('User plugin is not configured correctly. Configuration missing.'));
 		}
 
 		$this->User = ClassRegistry::init(Configure::read('User.Auth.userModel'));
@@ -66,12 +66,23 @@ class UserController extends UserAppController {
  */
 	public function register() {
 		if ($this->request->is('post')) {
+			debug($this->request->data);
 			if ($this->User->register($this->request->data)) {
 				$this->Session->setFlash(__('Registered'));
 				$this->redirect(array('action' => 'login'));
 			} else {
+				debug($this->User->validationErrors);
 				$this->Session->setFlash(__('Failed to register'));
 			}
 		}
+
+		$this->set('modelName', $this->User->alias);
+	}
+
+/**
+ * User Account overview
+ */
+	public function view() {
+		$this->set('user', $this->Auth->user());
 	}
 }

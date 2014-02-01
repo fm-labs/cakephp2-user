@@ -3,9 +3,13 @@ App::uses('UserAppModel', 'User.Model');
 App::uses('AuthComponent', 'Controller/Component');
 
 /**
- * Class User
+ * Class UserUser
  */
-class User extends UserAppModel {
+class UserUser extends UserAppModel {
+
+	//public $alias = "User";
+
+	public $useTable = "users";
 
 	public $actsAs = array('Containable');
 
@@ -198,8 +202,15 @@ class User extends UserAppModel {
 			return false;
 		}
 
+		// sanitize
 		if (isset($data[$this->alias]['id'])) {
 			unset($data[$this->alias]['id']);
+		}
+
+		// auto-enable login
+		if (Configure::read('User.Register.autoEnableLogin')) {
+			$data[$this->alias]['allow_login'] = true;
+			$data[$this->alias]['published'] = true;
 		}
 
 		$this->create();
@@ -228,12 +239,51 @@ class User extends UserAppModel {
  * @return mixed
  * @todo Refactor
  */
-	public function saveEdit() {
+	public function saveEdit($data) {
 		if (array_key_exists('pass', $data[$this->alias]) && empty($data[$this->alias]['pass'])) {
 			unset($data[$this->alias]['pass']);
 			unset($data[$this->alias]['pass2']);
 			$this->validator()->remove('pass')->remove('pass2');
 		}
 		return $this->save($data);
+	}
+
+/**
+ * EXPERIMENTAL Support for the Facebook plugin
+ *
+ * @param $fbUser
+ * @return bool
+ */
+	public function syncFacebookUser($fbUser) {
+		// check if user exists with facebookId
+		$user = $this->find('first', array(
+			'conditions' => array(
+				$this->alias . '.facebook_uid' => $fbUser['id']
+			)
+		));
+
+		if ($user) {
+			return $user[$this->alias];
+		}
+
+		$newUser = array(
+			'username' => $fbUser['username'],
+			'first_name' => $fbUser['first_name'],
+			'last_name' => $fbUser['last_name'],
+			'email' => $fbUser['email'],
+			'facebook_uid' => $fbUser['id'],
+			'verified' => $fbUser['verified'],
+			'allow_login' => 0,
+		);
+		$this->create();
+		if ($this->save(array($this->alias => $newUser), false)) {
+			$user = $this->read(null, $this->id);
+			return $user[$this->alias];
+		} else {
+			debug($this->validationErrors);
+			debug("failed to sync user");
+		}
+
+		return false;
 	}
 }
