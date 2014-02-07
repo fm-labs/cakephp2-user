@@ -7,9 +7,11 @@ App::uses('AuthComponent', 'Controller/Component');
  */
 class UserUser extends UserAppModel {
 
-	//public $alias = "User";
+	public $alias = "User";
 
 	public $useTable = "users";
+
+	public $displayField = 'email';
 
 	public $actsAs = array('Containable');
 
@@ -49,7 +51,6 @@ class UserUser extends UserAppModel {
 				'allowEmpty' => false,
 			),
 		),
-		*/
 		'first_name' => array(
 			'required' => array(
 				'rule' => array('notEmpty'),
@@ -76,6 +77,7 @@ class UserUser extends UserAppModel {
 				'message' => 'Please enter your last name',
 			)
 		),
+		*/
 		'pass' => array(
 			'required' => array(
 				'rule' => array('notEmpty'),
@@ -111,13 +113,13 @@ class UserUser extends UserAppModel {
 	);
 
 	public function __construct($id = false, $table = null, $ds = null) {
-		if (!isset($this->virtualFields['name'])) {
+		parent::__construct($id, $table, $ds);
+
+		if (!isset($this->virtualFields['name']) && $this->hasField('first_name') && $this->hasField('last_name')) {
 			$alias = ($this->alias) ? $this->alias : get_class($this);
 			$this->virtualFields['name'] = 'CONCAT(' . $alias . '.first_name, " ", ' . $alias . '.last_name)';
 			$this->displayField = 'name';
 		}
-
-		parent::__construct($id, $table, $ds);
 	}
 
 /**
@@ -202,6 +204,17 @@ class UserUser extends UserAppModel {
  * @return bool|mixed
  */
 	public function register($data) {
+		return $this->saveAdd($data);
+	}
+
+/**
+ * Wrapper for Model::save()
+ *
+ * @param array $data
+ * @return mixed|boolean
+ * @todo Refactor
+ */
+	public function saveAdd($data) {
 		if (!isset($data[$this->alias])) {
 			return false;
 		}
@@ -217,22 +230,11 @@ class UserUser extends UserAppModel {
 			$data[$this->alias]['published'] = true;
 		}
 
+		// email verification code
+		$data[$this->alias]['verification_code'] = strtoupper(substr(uniqid(), 0, 5));
+
 		$this->create();
 		return $this->saveAll($data, array('atomic' => true));
-	}
-
-/**
- * Wrapper for Model::save()
- *
- * @param array $data
- * @return mixed|boolean
- * @todo Refactor
- */
-	public function saveAdd($data) {
-		//$data[$this->alias]['published'] = false;
-
-		$this->create();
-		return $this->save($data, true);
 	}
 
 /**

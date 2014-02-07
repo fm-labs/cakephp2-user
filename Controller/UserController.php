@@ -45,10 +45,10 @@ class UserController extends UserAppController {
 
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
-				$this->Session->setFlash(__('Login successful'));
+				$this->Session->setFlash(__('Login successful'), 'User.flash/login_success');
 				$this->redirect($this->Auth->redirectUrl());
 			} else {
-				$this->Session->setFlash(__('Login failed'));
+				$this->Session->setFlash(__('Login failed'), 'User.flash/login_failure');
 				return;
 			}
 		}
