@@ -167,6 +167,20 @@ class UserUser extends UserAppModel {
 			}
 		}
 
+		// disallow direct access to password field
+		if (array_key_exists('password', $this->data[$this->alias])) {
+			unset($this->data[$this->alias]['password']);
+		}
+
+		// generate password
+		if (array_key_exists('pass', $this->data[$this->alias]) && !empty($this->data[$this->alias]['pass'])) {
+			$this->data[$this->alias]['password'] = $this->data[$this->alias]['pass'];
+			//unset($this->data[$this->alias]['pass']);
+			//unset($this->data[$this->alias]['pass2']);
+		}
+
+		debug($this->data);
+
 		return true;
 	}
 
@@ -175,17 +189,11 @@ class UserUser extends UserAppModel {
  * @see Model::beforeSave()
  */
 	public function beforeSave($options = array()) {
-		// disallow direct access to password field
-		if (array_key_exists('password', $this->data[$this->alias])) {
-			unset($this->data[$this->alias]['password']);
+		if (isset($this->data[$this->alias]['password'])) {
+			$this->data[$this->alias]['password'] = $this->_generatePassword($this->data[$this->alias]['password']);
 		}
 
-		// generate password
-		if (array_key_exists('pass', $this->data[$this->alias]) && !empty($this->data[$this->alias]['pass'])) {
-			$this->data[$this->alias]['password'] = $this->_generatePassword($this->data[$this->alias]['pass']);
-			unset($this->data[$this->alias]['pass']);
-			unset($this->data[$this->alias]['pass2']);
-		}
+		debug($this->data);
 		return true;
 	}
 
